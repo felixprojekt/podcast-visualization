@@ -39,7 +39,7 @@ float r_width;
 float[] sum2 = new float[bands];
 
 // Declare a smooth factor
-float smoothFactor = 0.04;
+float smoothFactor = 0.01;
 
 // Used for smoothing
 float sum;
@@ -91,7 +91,7 @@ void setup() {
     if(random(100)>90) pt[index]=random(40,60); // Width of band
  
     pt[index++] = radians(random(5,30))/5; // Speed of rotation
- 
+    
     // get colors
     prob = random(100);
     if(prob<30) style[i*2]=colorBlended(random(1), 255,0,100, 255,0,0, 210);
@@ -160,7 +160,7 @@ void draw() {
     else {
       fill(style[i*2]);
       noStroke();
-      arc(0,0, pt[index++],pt[index++],pt[index++]);
+      arc(0,0, pt[index++],pt[index++],pt[index++], rmsScaled);
     }
  
     // increase rotation
@@ -215,11 +215,11 @@ void arcLineBars(float x,float y,float deg,float rad,float w) {
 }
  
 // Draw solid arc
-void arc(float x,float y,float deg,float rad,float w) {
+void arc(float x,float y,float deg,float rad,float w, float scale) {
   int a = int(min (deg/SINCOS_PRECISION,SINCOS_LENGTH-1));
   beginShape(QUAD_STRIP);
   for (int i = 0; i < a; i++) {
-    vertex(cosLUT[i]*(rad)+x,sinLUT[i]*(rad)+y);
+    vertex((cosLUT[i]*(rad)+x)*scale/100,(sinLUT[i]*(rad)+y));
     vertex(cosLUT[i]*(rad+w)+x,sinLUT[i]*(rad+w)+y);
   }
   endShape();
