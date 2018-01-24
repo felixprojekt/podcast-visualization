@@ -21,11 +21,18 @@ SoundFile sample2;
 Amplitude rms;
 FFT fft;
 
+ParticleSystem ps;
+ParticleSystem ps2;
+
 // Declare a scaling factor
 float scale = 7.0;
 
 // Define how many FFT bands we want
 int bands = 128;
+
+//Triangle dimensions
+//float outsideRadius = 150;
+//float insideRadius = 100;
 
 // declare a drawing variable for calculating rect width
 float r_width;
@@ -71,7 +78,10 @@ void setup() {
   fft = new FFT(this, bands);
   fft.input(sample2);
  
-
+  ps = new ParticleSystem(new PVector(width/2, height - 150));
+  
+  //ps2 = new ParticleSystem(new PVector(width - width/4, height - 100));
+  
 }      
 
 void draw() {
@@ -79,6 +89,8 @@ void draw() {
   background(bg);
   noStroke();
   fill(255, 105, 165);
+ 
+  
   
   // Smooth the rms data by smoothing factor
   sum += (rms.analyze() - sum) * smoothFactor;  
@@ -102,7 +114,7 @@ void draw() {
     // draw the rects with a scale factor
     rect( i*r_width, height, r_width, -sum2[i]*height*scale );
   }
-
+  
   pg.beginDraw();    
   pg.ellipse(random(pg.width), random(pg.height), 150, 150);
   pg.endDraw(); 
@@ -110,6 +122,8 @@ void draw() {
   ambient(250, 250, 250);
   pointLight(255, 255, 255, 0, 0, 200);
      
+
+  
   pushMatrix();
   translate(width/2, height/2, -200);
   rotateZ(frameCount * PI / 1000);
@@ -118,6 +132,32 @@ void draw() {
   shape(trefoil);
   popMatrix();
   
+         ps.addParticle();
+  ps.run();
+  
+  /* 
+  int numPoints = int(map(mouseX, 0, width, 6, 60));
+  float angle = 0;
+  float angleStep = 180.0/numPoints;
+    
+  beginShape(TRIANGLE_STRIP); 
+  for (int i = 0; i <= numPoints; i++) {
+    float px = width/2 + cos(radians(angle)) * outsideRadius;
+    float py = height/2 + sin(radians(angle)) * outsideRadius;
+    angle += angleStep;
+    vertex(px, py);
+    px = width/2 + cos(radians(angle)) * insideRadius;
+    py = height/2 + sin(radians(angle)) * insideRadius;
+    vertex(px, py); 
+    angle += angleStep;
+  }
+  endShape();
+  
+  */
+
+  
+  //ps2.addParticle();
+  //ps2.run();
  
 }
  
@@ -222,4 +262,86 @@ PVector evalPoint(float u, float v, float scale) {
   pt.y = y + d * (qvn.y * cos(s) + ww.y * sin(s));
   pt.z = z + d * ww.z * sin(s);
   return pt;
+}
+
+class ParticleSystem {
+  ArrayList<Particle> particles;
+  PVector origin;
+
+  ParticleSystem(PVector position) {
+    origin = position.copy();
+    particles = new ArrayList<Particle>();
+  }
+
+  void addParticle() {
+    particles.add(new Particle(origin));
+  }
+
+  void run() {
+    for (int i = particles.size()-1; i >= 0; i--) {
+      Particle p = particles.get(i);
+      p.run();
+      if (p.isDead()) {
+        particles.remove(i);
+      }
+    }
+  }
+}
+
+
+// A simple Particle class
+
+class Particle {
+  PVector position;
+  PVector velocity;
+  PVector acceleration;
+  float lifespan;
+  float opacity;
+
+  Particle(PVector l) {
+    if(randomBool()) {
+      acceleration = new PVector(0.005, 0.002);
+    } else {
+      acceleration = new PVector(-0.005, -0.002);
+    }
+  
+    velocity = new PVector(random(-0.5, 0.5), random(-1.5, 0));
+    position = l.copy();
+    lifespan = 555.0;
+    opacity = 0;
+  }
+
+  void run() {
+    update();
+    display();
+  }
+
+  // Method to update position
+  void update() {
+    velocity.add(acceleration);
+    position.add(velocity);
+    lifespan -= 1.0;
+    opacity += 0.08;
+    
+  }
+
+  // Method to display
+  void display() {
+    //stroke(255, lifespan);
+    fill(255, 255, 255, opacity);
+    ellipse(position.x, position.y, 6, 6);
+  }
+
+  // Is the particle still useful?
+  boolean isDead() {
+    if (lifespan < 0.0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+boolean randomBool() {
+  return random(1) > .5;
 }
