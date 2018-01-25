@@ -1,14 +1,12 @@
 import processing.sound.*;
 
-//Trefoil
-PGraphics pg;
 PImage bg;
 PImage img_zrni;
 PShape trefoil;
 
-PShape tree1, tree4, goat, cow, rat;
+PShape tree1, tree5, goat, cow, rat;
 
-float tree1Speed, tree4Speed, goatSpeed, cowSpeed, ratSpeed, boxSpeed;
+float tree1Speed, tree5Speed, goatSpeed, cowSpeed, ratSpeed, boxSpeed;
 
 float x;
 float y;
@@ -21,9 +19,6 @@ Amplitude rms;
 
 ParticleSystem ps;
 
-// Declare a scaling factor
-float scale = 7.0;
-
 // declare a drawing variable for calculating rect width
 float r_width;
 
@@ -35,42 +30,46 @@ float volume;
 void setup() {
   size(1152, 768, P3D);
   
-  bg = loadImage("assets/bg.jpg");
+  //bg = loadImage("assets/bg.jpg");
   img_zrni = loadImage("assets/skupina.jpg");
   
   tree1 = loadShape("assets/tree1.obj");
-  tree4 = loadShape("assets/tree4.obj");
-  tree4.scale(12);
+  tree5 = loadShape("assets/tree5.obj");
+  tree5.scale(12);
   
   goat = loadShape("assets/goat.obj");
   goat.scale(0.15);
   cow = loadShape("assets/cow.obj");
   cow.scale(0.3);
+  cow.shininess(15.0);
   
   rat = loadShape("assets/rat.obj");
  
   //Load and play a soundfile and loop it
   sample = new SoundFile(this, "/Users/milan/Disk Google/Grafika/2018-01 Rozhlas podcast/processing/diagram1/assets/zrni.aif");
-  sample.loop();
+  //sample.loop();
 
   
   // Create and patch the rms tracker
   rms = new Amplitude(this);
   rms.input(sample);
  
-  ps = new ParticleSystem(new PVector(width/2, height - 150));
+  ps = new ParticleSystem(new PVector(width/2, height + 350));
 }      
 
 void draw() {
   // Set background color, noStroke and fill color
-  background(bg);
+  //background(bg);
+  background(10,10,10);
   noStroke();
-  fill(255, 105, 165);
+  fill(255, 15, 15);
   
   volume = rms.analyze();
   
   ambient(250, 250, 250);
-  pointLight(255, 255, 255, 0, 0, 200);
+  pointLight(255, 160, 255, 0, 0, 200);
+  pointLight(155, 155, 155, width + 400, height/2, 400);
+  pointLight(155, 155, 155, 0, height + 300, -200);
   
   pushMatrix();
   translate(width/2, height/2);
@@ -80,20 +79,10 @@ void draw() {
   
   float dx = (volume*100) - x;
   x += dx * easing;
-  box(x + 160);
-  boxSpeed += 0.003;  
+  box(x + 110);
+  boxSpeed += 0.001;  
   popMatrix();
   
-  pushMatrix();
-  translate(width/2, height/2, -200);
-  rotateZ(frameCount * PI / 1000);
-  rotateX(0);
-  rotateY(0);      
-  shape(trefoil);
-  popMatrix();
-  
-  ps.addParticle();
-  ps.run();
   
   pushMatrix();  
   translate(width/2, height/2);
@@ -102,27 +91,30 @@ void draw() {
   rotateX(tree1Speed);
   translate(400, 150);
   shape(tree1);
-  tree1Speed += 0.01;
+  tree1Speed += 0.0005;
   popMatrix();
   
   pushMatrix();  
   translate(0, height/2);
-  rotateZ(-tree4Speed);
-  //rotateY(tree4Speed);
+  
+  rotateZ(-tree5Speed);
+  //rotateY(tree5Speed);
   rotateX(PI);
   translate(width - 100, -300);
-  shape(tree4);
-  tree4Speed += 0.001;
+  shape(tree5);
+  tree5Speed += 0.0001;
   popMatrix();
   
   pushMatrix();  
+  fill(156,57,111);
   translate(width/2, height/2, 0.5);
   rotateZ(goatSpeed);
   rotateY(-PI);
   rotateX(goatSpeed);
   translate(230, 430, 150);
+  goat.disableStyle();
   shape(goat);
-  goatSpeed += 0.004;
+  goatSpeed += 0.0004;
   popMatrix();
     
   pushMatrix();  
@@ -132,17 +124,28 @@ void draw() {
   rotateX(ratSpeed);
   translate(130, 230, -150);
   shape(rat);
-  ratSpeed += 0.003;
+  ratSpeed += 0.0003;
   popMatrix();
-
-  pushMatrix();  
+  
+  pushMatrix();
+  fill(0,255,255);
+  shininess(95.0);
+  ambient(color(0,0,255));
   translate(width/2 + 150, height/2, 0.5);
   rotateZ(PI/2);
   rotateY(cowSpeed);
   rotateX(cowSpeed);
   translate(530, 230, -450);
+  cow.disableStyle();
+  //cow.setFill(color(27));
   shape(cow);
-  cowSpeed += 0.001;
+  cowSpeed += 0.0001;
+  popMatrix();
+  
+  pushMatrix();
+  translate(0,0,-500);
+  ps.addParticle();
+  ps.run();
   popMatrix();
   
 }
