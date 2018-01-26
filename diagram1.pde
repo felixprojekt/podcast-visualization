@@ -4,9 +4,9 @@ PImage bg;
 PImage img_zrni;
 PShape trefoil;
 
-PShape tree1, tree5, goat, cow, rat;
+PShape tree1, tree5, tree6, goat, cow, rat;
 
-float tree1Speed, tree5Speed, goatSpeed, cowSpeed, ratSpeed, boxSpeed;
+float tree1Speed, tree5Speed, tree6Speed, goatSpeed, cowSpeed, ratSpeed, boxSpeed;
 
 float x;
 float y;
@@ -36,6 +36,9 @@ void setup() {
   tree1 = loadShape("assets/tree1.obj");
   tree5 = loadShape("assets/tree5.obj");
   tree5.scale(12);
+  
+  tree6 = loadShape("assets/tree6.obj");
+  tree6.scale(42);
   
   goat = loadShape("assets/goat.obj");
   goat.scale(0.15);
@@ -83,6 +86,15 @@ void draw() {
   boxSpeed += 0.001;  
   popMatrix();
   
+  pushMatrix();  
+  translate(width/2, height/2);
+  rotateZ(tree6Speed);
+  rotateY(tree6Speed);
+  rotateX(PI);
+  translate(-100, 550);
+  shape(tree6);
+  tree6Speed += 0.0007;
+  popMatrix();
   
   pushMatrix();  
   translate(width/2, height/2);
@@ -106,13 +118,11 @@ void draw() {
   popMatrix();
   
   pushMatrix();  
-  fill(156,57,111);
   translate(width/2, height/2, 0.5);
   rotateZ(goatSpeed);
   rotateY(-PI);
   rotateX(goatSpeed);
   translate(230, 430, 150);
-  goat.disableStyle();
   shape(goat);
   goatSpeed += 0.0004;
   popMatrix();
@@ -128,16 +138,12 @@ void draw() {
   popMatrix();
   
   pushMatrix();
-  fill(0,255,255);
-  shininess(95.0);
   ambient(color(0,0,255));
   translate(width/2 + 150, height/2, 0.5);
   rotateZ(PI/2);
   rotateY(cowSpeed);
   rotateX(cowSpeed);
   translate(530, 230, -450);
-  cow.disableStyle();
-  //cow.setFill(color(27));
   shape(cow);
   cowSpeed += 0.0001;
   popMatrix();
