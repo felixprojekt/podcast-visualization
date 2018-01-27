@@ -96,7 +96,7 @@ void draw() {
   pointLight(155, 155, 155, 0, height + 300, -200);
   
   pushMatrix();
-  fill(17, 120, 95);
+  fill(117, 230, 215);
   translate(width/2, height/2);
   rotateX(boxSpeed);
   rotateY(-boxSpeed);
