@@ -3,13 +3,23 @@ import processing.sound.*;
 PImage bg;
 PShape trefoil;
 
-PShape tree1, tree5, tree6, goat, cow, rat, meteor1, meteor2, meteor3;
+PShape tree2, tree7, tree6, goat, cow, rat, meteor1, meteor2, meteor3, chair, phone;
 
-float tree1Speed, tree5Speed, tree6Speed, goatSpeed, cowSpeed, ratSpeed, boxSpeed, meteor3Speed, meteor1Speed, meteor2Speed;
+float tree2Speed, tree7Speed, tree6Speed, goatSpeed, 
+cowSpeed, ratSpeed, boxSpeed, meteor3Speed, meteor1Speed, phoneSpeed,
+meteor2Speed, chairSpeed;
 
 float x;
 float y;
 float easing = 0.08;
+
+int gridSize = 7;
+
+int gridSpacing = 50;
+
+float gridEasing = 0.0003;
+
+float gridMovement = 0, gridMoveStepX, gridMoveStepY, gridX, gridY;
 
 // Declare the processing sound variables 
 SoundFile sample;
@@ -30,9 +40,9 @@ void setup() {
   size(1152, 768, P3D);
   
   //bg = loadImage("assets/bg.jpg");
-  tree1 = loadShape("assets/tree1.obj");
-  tree5 = loadShape("assets/tree5.obj");
-  tree5.scale(12);
+  tree2 = loadShape("assets/tree2.obj");
+  tree7 = loadShape("assets/tree7.obj");
+  tree7.scale(12);
   
   tree6 = loadShape("assets/tree6.obj");
   tree6.scale(42);
@@ -46,12 +56,19 @@ void setup() {
   meteor3 = loadShape("assets/meteor3.obj");
   meteor3.scale(22);
   
+  phone = loadShape("assets/phone.obj");
+  phone.scale(22);
+  
   goat = loadShape("assets/goat.obj");
   goat.scale(0.15);
+  
   cow = loadShape("assets/cow.obj");
   cow.scale(0.3);
   
   rat = loadShape("assets/rat.obj");
+  
+  chair = loadShape("assets/chair.obj");
+  chair.scale(22);
  
   //Load and play a soundfile and loop it
   sample = new SoundFile(this, "/Users/milan/Disk Google/Grafika/2018-01 Rozhlas podcast/processing/diagram1/assets/zrni.aif");
@@ -62,7 +79,7 @@ void setup() {
   rms.input(sample);
  
   ps = new ParticleSystem(new PVector(width/2, height + 350));
-
+  
 }      
 
 void draw() {
@@ -115,6 +132,20 @@ void draw() {
   meteor2Speed += 0.0005;
   popMatrix();
   
+  pushMatrix();
+  fill(150, 150, 150);
+  translate(width/2, height/2);
+  rotateZ(phoneSpeed);
+  rotateY(PI);
+  rotateX(phoneSpeed);
+  translate(-400, 150);
+  rotateY(phoneSpeed * 4);
+  rotateX(phoneSpeed * 5);
+  phone.disableStyle();
+  shape(phone);
+  phoneSpeed += 0.0006;
+  popMatrix();
+  
   pushMatrix();  
   fill(150, 150, 150);
   translate(width/2, height/2);
@@ -140,20 +171,20 @@ void draw() {
   pushMatrix();  
   translate(width/2, height/2);
   rotateZ(PI);
-  rotateY(tree1Speed);
-  rotateX(tree1Speed);
+  rotateY(tree2Speed);
+  rotateX(tree2Speed);
   translate(400, 150);
-  shape(tree1);
-  tree1Speed += 0.0005;
+  shape(tree2);
+  tree2Speed += 0.0005;
   popMatrix();
   
   pushMatrix();  
   translate(0, height/2);
-  rotateZ(-tree5Speed);
+  rotateZ(-tree7Speed);
   rotateX(PI);
   translate(width - 100, -300);
-  shape(tree5);
-  tree5Speed += 0.0001;
+  shape(tree7);
+  tree7Speed += 0.0001;
   popMatrix();
   
   pushMatrix();  
@@ -187,10 +218,47 @@ void draw() {
   cowSpeed += 0.0001;
   popMatrix();
   
+  pushMatrix();  
+  translate(width/2, height/2);
+  rotateZ(chairSpeed);
+  rotateY(PI);
+  rotateX(PI);
+  translate(-330, 230, -150);
+  rotateX(chairSpeed*3);
+  shape(chair);
+  chairSpeed += 0.0004;
+  popMatrix();
+  
+  
   pushMatrix();
   translate(0,0,-500);
   ps.addParticle();
   ps.run();
+  popMatrix();
+  
+  
+  pushMatrix();
+  fill(45);
+  translate(-width/2, -height/2, -650);  
+  
+   gridMoveStepX = random(-gridSpacing * 40, gridSpacing * 40);
+   
+   gridMovement = gridMoveStepX - gridX;
+   gridX += gridMovement * gridEasing; 
+   
+   gridMoveStepY = random(-gridSpacing * 40, gridSpacing * 40);
+   
+   gridMovement = gridMoveStepY - gridY;
+   gridY += gridMovement * gridEasing;
+
+  for(int i = 0; i < width * 2; i += gridSpacing) {
+    ellipse(gridSpacing + i + gridX, gridSpacing + gridY, gridSize, gridSize);
+    
+    for(int j = 1; j < height * 2; j += gridSpacing) {
+      ellipse(gridSpacing + i + gridX, gridSpacing + j + gridY, gridSize, gridSize);
+    }
+    
+  }
   popMatrix();
 }
 
