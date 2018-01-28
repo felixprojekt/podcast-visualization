@@ -37,38 +37,41 @@ float sum;
 float volume;
 
 void setup() {
-  size(1152, 768, P3D);
+  size(1400, 850, P3D);
   
   //bg = loadImage("assets/bg.jpg");
   tree2 = loadShape("assets/tree2.obj");
+  tree2.scale(2);
+  
   tree7 = loadShape("assets/tree7.obj");
-  tree7.scale(12);
+  tree7.scale(19);
   
   tree6 = loadShape("assets/tree6.obj");
   tree6.scale(42);
   
   meteor1 = loadShape("assets/meteor1.obj");
-  meteor1.scale(22);
+  meteor1.scale(42);
   
   meteor2 = loadShape("assets/meteor2.obj");
-  meteor2.scale(22);
+  meteor2.scale(32);
   
   meteor3 = loadShape("assets/meteor3.obj");
-  meteor3.scale(22);
+  meteor3.scale(36);
   
   phone = loadShape("assets/phone.obj");
-  phone.scale(22);
+  phone.scale(42);
   
   goat = loadShape("assets/goat.obj");
-  goat.scale(0.15);
+  goat.scale(0.25);
   
   cow = loadShape("assets/cow.obj");
-  cow.scale(0.3);
+  cow.scale(0.4);
   
   rat = loadShape("assets/rat.obj");
+  rat.scale(2);
   
   chair = loadShape("assets/chair.obj");
-  chair.scale(22);
+  chair.scale(42);
  
   //Load and play a soundfile and loop it
   sample = new SoundFile(this, "/Users/milan/Disk Google/Grafika/2018-01 Rozhlas podcast/processing/diagram1/assets/zrni.aif");
@@ -104,7 +107,7 @@ void draw() {
   
   float dx = (volume*100) - x;
   x += dx * easing;
-  box(x + 130);
+  box(x + 180);
   boxSpeed += 0.001;  
   popMatrix();
   
